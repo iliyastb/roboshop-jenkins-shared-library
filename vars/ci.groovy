@@ -30,6 +30,10 @@ def call() {
           }
         }
       }
+
+      post {
+        failure 'mail,body: \'test\', from: \'skiliyas300@gmail.com\', replyTo: \'\', subject: \'test\', to: \'skiliyas300@gmail.com\''
+      }
     }
   }
 }
