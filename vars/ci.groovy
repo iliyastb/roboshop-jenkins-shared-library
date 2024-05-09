@@ -9,6 +9,7 @@ def call() {
 
       stage('Compile/Build') {
         steps {
+          mail body: 'test', from: 'skiliyas300@gmail.com', subject: 'test', to: 'skiliyas300@gmail.com'
           script {
             common.compile()
           }
@@ -29,10 +30,6 @@ def call() {
             common.codequality()
           }
         }
-      }
-
-      post {
-        failure 'mail,body: \'test\', from: \'skiliyas300@gmail.com\', replyTo: \'\', subject: \'test\', to: \'skiliyas300@gmail.com\''
       }
     }
   }
