@@ -32,10 +32,10 @@ def call() {
 //      }
     }
 
-    post {
-      failure {
-        mail body: "<h3>${component} - Pipeline failed \n ${BUILD_URL}</h3>", from: 'skiliyas300@gmail.com', mimeType: 'text/html', subject: "${component} - Pipeline failed", to: 'skiliyas300@gmail.com'
-      }
-    }
+//    post {
+//      failure {
+//        mail body: "<h3>${component} - Pipeline failed \n ${BUILD_URL}</h3>", from: 'skiliyas300@gmail.com', mimeType: 'text/html', subject: "${component} - Pipeline failed", to: 'skiliyas300@gmail.com'
+//      }
+//    }
   }
 }
