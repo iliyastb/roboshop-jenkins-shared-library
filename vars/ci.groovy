@@ -10,11 +10,11 @@ def call() {
         common.compile()
       }
 
-      stage('Compile/Build') {
+      stage('Test Cases') {
         common.testcases()
       }
 
-      stage('Compile/Build') {
+      stage('Code Quality') {
         common.codequality()
       }
 
