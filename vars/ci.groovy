@@ -27,10 +27,9 @@ def call() {
 
     stage('Code Quality') {
       steps {
-        echo "ok"
-//        script {
-//          common.codequality()
-//        }
+        script {
+          common.codequality()
+        }
       }
     }
 
