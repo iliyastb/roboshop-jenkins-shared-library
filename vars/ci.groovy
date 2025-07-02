@@ -9,28 +9,29 @@ def call() {
 
       stage('Compile/Build') {
         when { not { branch 'master' } }
-      }
-      steps {
-        script {
-          common.compile()
+        steps {
+          script {
+            common.compile()
+          }
         }
       }
-    }
 
-    stage('Test Cases') {
-      steps {
-        script {
-          common.testcases()
+      stage('Test Cases') {
+        steps {
+          script {
+            common.testcases()
+          }
         }
       }
-    }
 
-    stage('Code Quality') {
-      steps {
-        script {
-          common.codequality()
+      stage('Code Quality') {
+        steps {
+          script {
+            common.codequality()
+          }
         }
       }
+
     }
 
 //    post {
