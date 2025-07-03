@@ -5,8 +5,15 @@ def call() {
   node('workstation') {
 
     try {
+
+      stage('Check out Code') {
+        cleanWs()
+        git branch: 'main', url: 'https://github.com/iliyastb/cart'
+      }
+
+      sh 'env'
+
       stage('Compile/Build') {
-        sh 'env'
         common.compile()
       }
 
