@@ -1,15 +1,13 @@
 def call() {
 
-  env.ENV = "prod"
-
   node('workstation') {
 
     stage('Init') {
-      sh 'terraform init -backend-config=env-${env.ENV}/state.tfvars'
+      sh 'terraform init -backend-config=env-prod/state.tfvars'
     }
 
     stage('Apply') {
-      sh 'terraform apply -auto-approve -var-file=env-${env.ENV}/main.tfvars'
+      sh 'terraform apply -auto-approve -var-file=env-prod/main.tfvars'
     }
 
   }
