@@ -25,6 +25,14 @@ def call() {
 //          sh 'echo'
         }
       }
+
     }
+
+    post {
+      always {
+        cleasWs()
+      }
+    }
+
   }
 }
