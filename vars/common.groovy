@@ -3,7 +3,7 @@ def compile() {
     sh 'npm install'
   }
   if(app_lang == "maven") {
-    sh 'mvn package'
+    sh 'mvn clean package ; mv target/${component}-1.0.jar ${component}.jar'
   }
 }
 
