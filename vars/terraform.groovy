@@ -4,6 +4,7 @@ def call() {
 
     parameters {
       string(name: 'ENV', defaultValue: '', description: 'which environment?')
+      string(name: 'ACTION', defaultValue: '', description: 'which action?')
     }
 
     options {
