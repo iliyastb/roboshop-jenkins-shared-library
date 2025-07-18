@@ -26,13 +26,19 @@ def call() {
             env.SSH_PASSWORD = sh ( script: 'aws ssm get-parameter --name prod.ssh.pass --with-decryption | jq .Parameter.Value | xargs', returnStdout: true ).trim()
             wrap([$class: 'MaskPasswordsBuildWrapper',
                   varPasswordPairs: [[password: SSH_PASSWORD]]]) {
-              sh 'aws ec2 describe-instances \\\n' +
+              sh 'aws ssm get-parameter --name prod.ssh.pass --with-decryption | jq .Parameter.Value | xargs > /tmp/ssh_pass\n' +
+                'SSH_PASSWORD=$(cat /tmp/ssh_pass)\n' +
+                '\n' +
+                'aws ec2 describe-instances \\\n' +
                 '  --filters "Name=tag:Name,Values=${component}-${environment}" \\\n' +
                 '  --query "Reservations[*].Instances[*].PrivateIpAddress" \\\n' +
                 '  --output text | tr \'\\\\t\' \'\\\\n\' | while read ip; do\n' +
-                '  echo "$ip ansible_user=centos ansible_password=${SSH_PASSWORD}"\n' +
-                'done > /tmp/servers'
-              sh 'ansible-playbook -i /tmp/servers roboshop.yml -e role_name=${component} -e env=${environment} -e ansible_user=centos -e ansible_password=${SSH_PASSWORD}'
+                '  echo "$ip ansible_user=centos ansible_password=$SSH_PASSWORD"\n' +
+                'done > /tmp/servers\n' +
+                '\n' +
+                'ansible-playbook -i /tmp/servers roboshop.yml \\\n' +
+                '  --extra-vars "role_name=${component} env=${environment}" \\\n' +
+                '  --ssh-extra-args=\'-o StrictHostKeyChecking=no\''
             }
           }
         }
