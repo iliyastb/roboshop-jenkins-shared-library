@@ -23,22 +23,25 @@ def codequality() {
 }
 
 def prepareArtifacts() {
-  sh 'echo ${TAG_NAME} >VERSION'
-  if (app_lang == "maven") {
-    sh 'zip -r ${component}-${TAG_NAME}.zip ${component}.jar schema VERSION'
-  } else {
-    sh 'zip -r ${component}-${TAG_NAME}.zip * -x Jenkinsfile'
-  }
+//  sh 'echo ${TAG_NAME} >VERSION'
+//  if (app_lang == "maven") {
+//    sh 'zip -r ${component}-${TAG_NAME}.zip ${component}.jar schema VERSION'
+//  } else {
+//    sh 'zip -r ${component}-${TAG_NAME}.zip * -x Jenkinsfile'
+//  }
+  sh 'docker build -t 860050401100.dkr.ecr.us-east-1.amazonaws.com/${component}:${TAG_NAME}'
 }
 
 def artifactUpload() {
-  env.NEXUS_USER = sh ( script: 'aws ssm get-parameter --name prod.nexus.user --with-decryption | jq .Parameter.Value | xargs', returnStdout: true).trim()
-  env.NEXUS_PASS = sh ( script: 'aws ssm get-parameter --name prod.nexus.pass --with-decryption | jq .Parameter.Value | xargs', returnStdout: true).trim()
-  wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [
-    [var: 'NEXUS_USER', password: env.NEXUS_USER],
-    [var: 'NEXUS_PASS', password: env.NEXUS_PASS]
-  ]]) {
-    sh 'echo ${TAG_NAME} >VERSION'
-    sh 'curl -v -u ${NEXUS_USER}:${NEXUS_PASS} --upload-file ${component}-${TAG_NAME}.zip http://172.31.30.104:8081/repository/${component}/${component}-${TAG_NAME}.zip'
-  }
+//  env.NEXUS_USER = sh ( script: 'aws ssm get-parameter --name prod.nexus.user --with-decryption | jq .Parameter.Value | xargs', returnStdout: true).trim()
+//  env.NEXUS_PASS = sh ( script: 'aws ssm get-parameter --name prod.nexus.pass --with-decryption | jq .Parameter.Value | xargs', returnStdout: true).trim()
+//  wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [
+//    [var: 'NEXUS_USER', password: env.NEXUS_USER],
+//    [var: 'NEXUS_PASS', password: env.NEXUS_PASS]
+//  ]]) {
+//    sh 'echo ${TAG_NAME} >VERSION'
+//    sh 'curl -v -u ${NEXUS_USER}:${NEXUS_PASS} --upload-file ${component}-${TAG_NAME}.zip http://172.31.30.104:8081/repository/${component}/${component}-${TAG_NAME}.zip'
+//  }
+  sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 860050401100.dkr.ecr.us-east-1.amazonaws.com'
+  sh 'docker push 860050401100.dkr.ecr.us-east-1.amazonaws.com/${component}:${TAG_NAME}'
 }
