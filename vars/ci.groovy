@@ -14,6 +14,7 @@ def call() {
       stage('Check out Code') {
         cleanWs()
         git branch: 'main', url: "https://github.com/iliyastb/${component}"
+        credentialsId: 'github-ssh-key'
       }
 
       if (env.BRANCH_NAME != "main") {
